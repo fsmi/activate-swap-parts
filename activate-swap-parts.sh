@@ -16,11 +16,22 @@
 
 [ -x /sbin/sfdisk -a -x /bin/grep -a -x /bin/sed ] || exit 1
 
+kernel_cmdline_swap() {
+	for x in $(cat /proc/cmdline); do
+		case $x in
+		  SWAP=*)
+			echo ${x#SWAP=}
+			;;
+		esac
+	done
+}
+
 case "$1" in
   start|"")
   	swap_partitions=$(LANG=C /sbin/sfdisk -l -L -d 2>/dev/null | \
 			/bin/grep '^/dev/.* : .*Id=82' | \
-			/bin/sed -e 's,^\(/dev/[a-z0-9]\+\) :.*,\1,')
+			/bin/sed -e 's,^\(/dev/[a-z0-9]\+\) :.*,\1,'; \
+			kernel_cmdline_swap)
   	for swap_part in ${swap_partitions}; do
 		log_action_begin_msg "Activating swap on partition ${swap_part}"
 		swapon "${swap_part}"
