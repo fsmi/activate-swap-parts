@@ -1,7 +1,7 @@
 #! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          activate-swap-parts
-# Required-Start:    mountall
+# Required-Start:    $remote_fs
 # Required-Stop:
 # Default-Start:     S
 # Default-Stop:
@@ -14,7 +14,7 @@
 
 . /lib/lsb/init-functions
 
-[ -x /sbin/sfdisk -a -x /bin/grep -a -x /bin/sed ] || exit 1
+[ -x /sbin/sfdisk -a -x /usr/bin/file ] || exit 1
 
 kernel_cmdline_swaps() {
 	for x in $(cat /proc/cmdline); do
