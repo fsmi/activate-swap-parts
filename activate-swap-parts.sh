@@ -30,10 +30,15 @@ fdisk_swaps() {
 		/bin/grep '^/dev/.* : .*Id=82' | \
 		/bin/sed -e 's,^\(/dev/[a-z0-9]\+\) :.*,\1,'
 }
+whole_disk_swaps () {
+	LANG=C /usr/bin/file -sL /dev/[hsvx]d? | \
+		/bin/fgrep 'swap file' | \
+		/usr/bin/cut -d: -f1
+}
 
 case "$1" in
   start|"")
-	swap_partitions=$(fdisk_swaps; kernel_cmdline_swaps)
+	swap_partitions=$(fdisk_swaps; whole_disk_swaps; kernel_cmdline_swaps)
 	for swap_part in ${swap_partitions}; do
 		log_action_begin_msg "Activating swap on partition ${swap_part}"
 		swapon "${swap_part}"
