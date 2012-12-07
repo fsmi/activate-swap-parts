@@ -11,6 +11,7 @@
 ### END INIT INFO
 
 # Copyright (C) 2008  Fabian Knittel <fabian.knittel@avona.com>
+# Copyright (C) 2012  Timo Weingärtner <timo@tiwe.de>
 
 . /lib/lsb/init-functions
 
